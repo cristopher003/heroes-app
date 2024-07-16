@@ -6,7 +6,6 @@ export const HeroesRoutes = () => {
   return (
     <>
     <Navbar></Navbar>
-    <h1>HeroesApp</h1>
     <Outlet/>
     </>
   )

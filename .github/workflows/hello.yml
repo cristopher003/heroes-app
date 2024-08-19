@@ -1,0 +1,20 @@
+# nombre de la action
+name: say hello  
+
+# cuando se actibara
+on:
+    # evento
+    push: 
+        branches: 
+            -master
+
+# trabajos
+jobs:
+    # nombre del trabajo y el sistema opewrativo
+    hello_world:
+        runs-on: ubuntu-22.04
+        # pasos
+        steps:
+            - name: Echo message 
+              run: echo "hola cristopher"
+

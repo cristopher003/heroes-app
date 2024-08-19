@@ -12,3 +12,6 @@ jobs:
     steps:
       - name: Echo message
         run: echo "hola cristopher"
+      - name: Dime la fecha
+        run: echo "ls -l"
+        

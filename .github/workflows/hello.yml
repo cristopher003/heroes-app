@@ -20,7 +20,8 @@
 name: say hello
 on:
   push:
-    branches: -master
+    branches: 
+      - 'master'
 jobs:
   hello_world:
     runs-on: ubuntu-22.04

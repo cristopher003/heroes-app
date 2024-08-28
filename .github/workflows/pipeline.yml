@@ -2,11 +2,21 @@ name: Deployment Pipeline
 
 on:
   push:
-    branches:
-      - "master"
+    branches: [master]
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
 
 jobs:
-  deploy:
+  avoid_reduncy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Cancel previous redundant  build
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{github.token}}
+
+  lint:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -16,6 +26,62 @@ jobs:
         with:
           node-version: 18
       - name: install dependecias
-        run: npm isntall
+        run: npm ci
       - name: lint
         run: npm run lint
+
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: install dependecias
+        run: npm ci
+      - name: build
+        run: npm run build
+      - uses: action/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+  test:
+    needs: [lint, build]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: install dependecias
+        run: npm ci
+      - uses: action/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Test
+        run: npm run test
+
+  # e2e test falta
+  # deploy:
+  #   needs: [test]
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 18
+  #     - name: install dependecias
+  #       run: npm ci
+  #     - name: Deploy
+  #       if: ${{ github.event_name == 'push' }}
+  #       uses: culaquier plugin de integracion
+  #       with:
+  #         heroku_api_key: ${{secrets.HEROKU_API_KEY}}

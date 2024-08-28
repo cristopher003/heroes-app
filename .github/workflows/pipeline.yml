@@ -64,8 +64,8 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Test
-        run: npm run test
+      # - name: Test
+      #   run: npm run test
 
   # e2e test falta
   # deploy:

@@ -60,7 +60,7 @@ jobs:
           node-version: 18
       - name: install dependecias
         run: npm ci
-      - uses: action/download-artifact@v2
+      - uses: actions/download-artifact@v2
         with:
           name: dist
           path: dist
